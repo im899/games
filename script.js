@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function() {
     setInterval(moveEnemies, 50);
     function moveEnemies() {
         enemies.forEach(enemy => {
-            let dx = (Math.random() - 30) * 500;
-            let dy = (Math.random() - 30) * 500;
+            let dx = (Math.random() - 0,5) * 500;
+            let dy = (Math.random() - 0,5) * 500;
             let x = enemy.offsetLeft + dx;
             let y = enemy.offsetTop + dy;
 
