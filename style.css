@@ -35,3 +35,10 @@ body, html {
     left: 100px;  /* Startpositie van de vijand */
     top: 100px;
 }
+.obstacle {
+    width: 40px;
+    height: 40px;
+    background-color: red;
+    position: absolute;
+    border-radius: 10px;
+}
