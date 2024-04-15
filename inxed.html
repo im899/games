@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roll a Ball</title>
+    <title>Roll a Ball Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="gameArea">
         <div id="ball"></div>
+        <div id="enemy"></div>
+        <div class="obstacle" style="top: 150px; left: 200px;"></div>
+        <div class="obstacle" style="top: 300px; left: 100px;"></div>
+        <div class="obstacle" style="top: 100px; left: 350px;"></div>
+        <div class="obstacle" style="top: 250px; left: 250px;"></div>
+        <div class="obstacle" style="top: 200px; left: 400px;"></div>
     </div>
+    <div id="score">Eliminaties: 0</div>
+    <audio id="eliminateSound" src="sounds/eliminate.mp3"></audio>
     <script src="script.js"></script>
 </body>
 </html>
-<div id="gameArea">
-    <div id="ball"></div>
-    <div id="enemy"></div>
-</div>
-<div id="gameArea">
-    <div id="ball"></div>
-    <div id="enemy"></div>
-    <div class="obstacle" style="top: 150px; left: 200px;"></div>
-    <div class="obstacle" style="top: 300px; left: 50px;"></div>
-    <div class="obstacle" style="top: 100px; left: 350px;"></div>
-</div>
-<div id="score">Eliminaties: 0</div>
+
