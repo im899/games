@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const enemy = document.getElementById('enemy');
     const gameArea = document.getElementById('gameArea');
     const obstacles = document.querySelectorAll('.obstacle');
+    const scoreElement = document.getElementById('score');
+    let score = 0;
 
     document.addEventListener('keydown', function(e) {
         movePlayer(e);
@@ -27,8 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkCollisions() {
         if (isCollision(player, enemy)) {
-            alert('Vijand geëlimineerd! Spel wordt gereset.');
-            resetGame();
+            score++;
+            scoreElement.textContent = 'Eliminaties: ' + score;
+            randomizeEnemy();
         }
 
         obstacles.forEach(obstacle => {
@@ -47,9 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function resetGame() {
+        score = 0;
+        scoreElement.textContent = 'Eliminaties: 0';
+        randomizeEnemy();
         player.style.left = '10px';
         player.style.top = '10px';
-        randomizeEnemy();
     }
 
     function randomizeEnemy() {
@@ -59,6 +64,18 @@ document.addEventListener('DOMContentLoaded', function() {
         enemy.style.top = y + 'px';
     }
 
-    randomizeEnemy();
-    setInterval(randomizeEnemy, 2000);  // Laat de vijand elke 2 seconden van positie veranderen
+    setInterval(randomizeEnemy, 2000); // Laat de vijand elke 2 seconden van positie veranderen
+
+    // Laat obstakels willekeurig rond bewegen
+    setInterval(() => {
+        obstacles.forEach(obstacle => {
+            let dx = Math.random() * 20 - 10;
+            let dy = Math.random() * 20 - 10;
+            let newX = Math.max(0, Math.min(gameArea.clientWidth - obstacle.clientWidth, obstacle.offsetLeft + dx));
+            let newY = Math.max(0, Math.min(gameArea.clientHeight - obstacle.clientHeight, obstacle.offsetTop + dy));
+            obstacle.style.left = newX + 'px';
+            obstacle.style.top = newY + 'px';
+        });
+    }, 1000);
 });
+
