@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function() {
     setInterval(moveEnemies, 50);
     function moveEnemies() {
         enemies.forEach(enemy => {
-            let dx = (Math.random() - 0.5) * 4;
-            let dy = (Math.random() - 0.5) * 4;
+            let dx = (Math.random() - 0.5) * 10;
+            let dy = (Math.random() - 0.5) * 10;
             let x = enemy.offsetLeft + dx;
             let y = enemy.offsetTop + dy;
 
@@ -78,3 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
             y = Math.max(0, Math.min(gameArea.clientHeight - enemy.clientHeight, y));
 
             enemy.style.left = x + 'px';
+            enemy.style.top = y + 'px';
+        });
+    }
+});
