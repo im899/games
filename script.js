@@ -53,3 +53,10 @@ document.addEventListener("keydown", function(event) {
         alert('Vijand geëlimineerd!');
     }
 });
+.obstacle {
+    width: 40px;
+    height: 40px;
+    background-color: red;
+    position: absolute;
+    border-radius: 10px;
+}
