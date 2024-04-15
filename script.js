@@ -1,55 +1,45 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const player = document.getElementById('player');
+    const enemy = document.getElementById('enemy');
     const gameArea = document.getElementById('gameArea');
-    const ball = document.getElementById('ball');
-    const enemies = document.querySelectorAll('.enemy');
     const obstacles = document.querySelectorAll('.obstacle');
-    const scoreElement = document.getElementById('score');
-    const sound = document.getElementById('eliminateSound');
-    let score = 0;
 
-    document.addEventListener("keydown", function(event) {
-        movePlayer(event);
+    document.addEventListener('keydown', function(e) {
+        movePlayer(e);
     });
 
     function movePlayer(event) {
-        let x = ball.offsetLeft;
-        let y = ball.offsetTop;
+        let x = player.offsetLeft;
+        let y = player.offsetTop;
+        switch(event.key) {
+            case 'ArrowUp': y -= 20; break;
+            case 'ArrowDown': y += 20; break;
+            case 'ArrowLeft': x -= 20; break;
+            case 'ArrowRight': x += 20; break;
+        }
+        x = Math.max(0, Math.min(gameArea.clientWidth - player.clientWidth, x));
+        y = Math.max(0, Math.min(gameArea.clientHeight - player.clientHeight, y));
+        player.style.left = x + 'px';
+        player.style.top = y + 'px';
 
-        switch (event.key) {
-            case "ArrowUp": y -= 10; break;
-            case "ArrowDown": y += 10; break;
-            case "ArrowLeft": x -= 10; break;
-            case "ArrowRight": x += 10; break;
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+        if (isCollision(player, enemy)) {
+            alert('Vijand geëlimineerd! Spel wordt gereset.');
+            resetGame();
         }
 
-        x = Math.max(0, Math.min(gameArea.clientWidth - ball.clientWidth, x));
-        y = Math.max(0, Math.min(gameArea.clientHeight - ball.clientHeight, y));
-
-        ball.style.left = x + 'px';
-        ball.style.top = y + 'px';
-
-        enemies.forEach(enemy => {
-            if (checkCollision(ball, enemy)) {
-                enemy.style.background = 'transparent';  // Elimineer de vijand visueel
-                sound.play();  // Speel het geluid af
-                score++;
-                scoreElement.innerHTML = 'Eliminaties: ' + score;
-                if (score >= 3) {
-                    alert("Alle vijanden geëlimineerd! Spel wordt gereset.");
-                    resetGame();
-                }
-            }
-        });
-
         obstacles.forEach(obstacle => {
-            if (checkCollision(ball, obstacle)) {
+            if (isCollision(player, obstacle)) {
                 alert('Je hebt een obstakel geraakt! Spel wordt gereset.');
                 resetGame();
             }
         });
     }
 
-    function checkCollision(a, b) {
+    function isCollision(a, b) {
         return a.offsetLeft < b.offsetLeft + b.offsetWidth &&
                a.offsetLeft + a.offsetWidth > b.offsetLeft &&
                a.offsetTop < b.offsetTop + b.offsetHeight &&
@@ -57,28 +47,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function resetGame() {
-        score = 0;
-        scoreElement.innerHTML = 'Eliminaties: 0';
-        enemies.forEach(enemy => {
-            enemy.style.background = 'red';
-        });
-        ball.style.left = '0px';
-        ball.style.top = '0px';
+        player.style.left = '10px';
+        player.style.top = '10px';
+        randomizeEnemy();
     }
 
-    setInterval(moveEnemies, 50);
-    function moveEnemies() {
-        enemies.forEach(enemy => {
-            let dx = (Math.random() - 0,5) * 500;
-            let dy = (Math.random() - 0,5) * 500;
-            let x = enemy.offsetLeft + dx;
-            let y = enemy.offsetTop + dy;
-
-            x = Math.max(0, Math.min(gameArea.clientWidth - enemy.clientWidth, x));
-            y = Math.max(0, Math.min(gameArea.clientHeight - enemy.clientHeight, y));
-
-            enemy.style.left = x + 'px';
-            enemy.style.top = y + 'px';
-        });
+    function randomizeEnemy() {
+        const x = Math.floor(Math.random() * (gameArea.clientWidth - enemy.clientWidth));
+        const y = Math.floor(Math.random() * (gameArea.clientHeight - enemy.clientHeight));
+        enemy.style.left = x + 'px';
+        enemy.style.top = y + 'px';
     }
+
+    randomizeEnemy();
+    setInterval(randomizeEnemy, 2000);  // Laat de vijand elke 2 seconden van positie veranderen
 });
