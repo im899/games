@@ -1,15 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     const gameArea = document.getElementById('gameArea');
     const ball = document.getElementById('ball');
-    const enemy = document.getElementById('enemy');
+    const enemies = document.querySelectorAll('.enemy');
     const obstacles = document.querySelectorAll('.obstacle');
     const scoreElement = document.getElementById('score');
     const sound = document.getElementById('eliminateSound');
     let score = 0;
-    let enemySpeedX = 1;
-    let enemySpeedY = 1;
 
     document.addEventListener("keydown", function(event) {
+        movePlayer(event);
+    });
+
+    function movePlayer(event) {
         let x = ball.offsetLeft;
         let y = ball.offsetTop;
 
@@ -20,43 +22,31 @@ document.addEventListener("DOMContentLoaded", function() {
             case "ArrowRight": x += 10; break;
         }
 
-        // Voorkom dat de bal uit de speelzone gaat
         x = Math.max(0, Math.min(gameArea.clientWidth - ball.clientWidth, x));
         y = Math.max(0, Math.min(gameArea.clientHeight - ball.clientHeight, y));
 
         ball.style.left = x + 'px';
         ball.style.top = y + 'px';
 
-        // Controleer op botsing met obstakels
-        obstacles.forEach(function(obstacle) {
-            if (checkCollision(ball, obstacle)) {
-                alert('Je hebt een obstakel geraakt!');
+        enemies.forEach(enemy => {
+            if (checkCollision(ball, enemy)) {
+                enemy.style.background = 'transparent';  // Elimineer de vijand visueel
+                sound.play();  // Speel het geluid af
+                score++;
+                scoreElement.innerHTML = 'Eliminaties: ' + score;
+                if (score >= 3) {
+                    alert("Alle vijanden geëlimineerd! Spel wordt gereset.");
+                    resetGame();
+                }
             }
         });
 
-        // Controleer op botsing met de vijand
-        if (checkCollision(ball, enemy)) {
-            enemy.style.background = 'transparent';  // Elimineer de vijand visueel
-            sound.play();  // Speel het geluid af
-            score++;
-            scoreElement.innerHTML = 'Eliminaties: ' + score;
-        }
-    });
-
-    function moveEnemy() {
-        let x = enemy.offsetLeft + enemySpeedX;
-        let y = enemy.offsetTop + enemySpeedY;
-
-        // Bounce off the walls
-        if (x < 0 || x > gameArea.clientWidth - enemy.clientWidth) {
-            enemySpeedX *= -1;
-        }
-        if (y < 0 || y > gameArea.clientHeight - enemy.clientHeight) {
-            enemySpeedY *= -1;
-        }
-
-        enemy.style.left = x + 'px';
-        enemy.style.top = y + 'px';
+        obstacles.forEach(obstacle => {
+            if (checkCollision(ball, obstacle)) {
+                alert('Je hebt een obstakel geraakt! Spel wordt gereset.');
+                resetGame();
+            }
+        });
     }
 
     function checkCollision(a, b) {
@@ -66,5 +56,25 @@ document.addEventListener("DOMContentLoaded", function() {
                a.offsetTop + a.offsetHeight > b.offsetTop;
     }
 
-    setInterval(moveEnemy, 20);
-});
+    function resetGame() {
+        score = 0;
+        scoreElement.innerHTML = 'Eliminaties: 0';
+        enemies.forEach(enemy => {
+            enemy.style.background = 'red';
+        });
+        ball.style.left = '0px';
+        ball.style.top = '0px';
+    }
+
+    setInterval(moveEnemies, 50);
+    function moveEnemies() {
+        enemies.forEach(enemy => {
+            let dx = (Math.random() - 0.5) * 4;
+            let dy = (Math.random() - 0.5) * 4;
+            let x = enemy.offsetLeft + dx;
+            let y = enemy.offsetTop + dy;
+
+            x = Math.max(0, Math.min(gameArea.clientWidth - enemy.clientWidth, x));
+            y = Math.max(0, Math.min(gameArea.clientHeight - enemy.clientHeight, y));
+
+            enemy.style.left = x + 'px';
